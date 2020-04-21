@@ -6,10 +6,6 @@ const sequelize = new Sequelize({
   // logging: false
 });
 
-const User = require('./user.js')(sequelize);
-const Course = require('./course.js')(sequelize);
-
-//As suggested by the Sequelize manual to test the connection
 sequelize
   .authenticate()
   .then(() => {
@@ -18,6 +14,11 @@ sequelize
   .catch(err => {
     console.error('Unable to connect to the database:', err);
   });
+
+const User = require('./user.js')(sequelize);
+const Course = require('./course.js')(sequelize);
+
+//As suggested by the Sequelize manual to test the connection
 
 const db = {
   sequelize,
