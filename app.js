@@ -14,7 +14,6 @@ const indexRouter = require('./routes/index');
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 app.use(express.json())
-// TODO setup your api routes here
 
 // setup a friendly greeting for the root route
 app.get('/', (req, res) => {
@@ -23,6 +22,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// API-routes are handled in a separate module
 app.use('/api', indexRouter);
 
 // send 404 if no other route matched
@@ -34,13 +34,11 @@ app.use((req, res) => {
 
 // setup a global error handler
 app.use((err, req, res, next) => {
-  if (enableGlobalErrorLogging) {
-    console.error(`Global error handler: ${JSON.stringify(err.stack)}`);
-  }
-  if (err.name === 'SequelizeValidationError'){
+  if (err.name === 'SequelizeValidationError'|| err.name === 'SequelizeUniqueConstraintError'){
       err.status = 400;
     }
   res.status(err.status || 500).json({
+    error: err.name,
     message: err.message
   });
 });
