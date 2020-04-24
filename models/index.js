@@ -3,9 +3,10 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: 'fsjstd-restapi.db',
-  // logging: false
+  logging: false
 });
 
+//As suggested by the Sequelize manual to test the connection
 sequelize
   .authenticate()
   .then(() => {
@@ -17,8 +18,6 @@ sequelize
 
 const User = require('./user.js')(sequelize);
 const Course = require('./course.js')(sequelize);
-
-//As suggested by the Sequelize manual to test the connection
 
 const db = {
   sequelize,
