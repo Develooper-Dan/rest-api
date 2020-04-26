@@ -104,18 +104,19 @@ router.put("/courses/:id", asyncHandler(authentication), asyncHandler (async(req
       throw new Error("No entry found")
     };
     if(course.userId === req.user.id){
-      if(req.body === {}){
+      //checks if the request body is empty
+      if(!Object.keys(req.body).length){
         res.status(400).json({message: "The request contained no data to be updated"})
       };
       //this part checks if the keys send by the user are actually matching to the ones on the course instance the user tries to update
-      let notKeys = [];
+      let invalidKeys = [];
       Object.keys(req.body).forEach(key => {
-          if(!Object.keys(course).find(thisKey => thisKey === key)){
-            notKeys.push(key);
+          if(!Object.keys(course.dataValues).includes(key)){
+            invalidKeys.push(key);
           };
       });
-      if (notKeys.length > 0){
-        res.status(400).json({message: `The request contained following invalid attributes: ${notKeys.join(", ")}`})
+      if (invalidKeys.length){
+        res.status(400).json({message: `The request contained following invalid attributes: ${invalidKeys.join(", ")}`})
       }
       //finally updating if the data is ok
       await course.update(req.body);
